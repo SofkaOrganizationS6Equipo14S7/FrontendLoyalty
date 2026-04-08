@@ -1,0 +1,9 @@
+export { LoginPage } from './login';
+export { DashboardPage } from './dashboard';
+export { StoresPage } from './stores';
+export { UsersPage } from './users';
+export { DiscountsPage } from './discounts';
+export { TransactionsPage } from './transactions';
+export { AuditPage } from './audit';
+export { SettingsPage } from './settings';
+export { RolesPermissionsPage } from './roles';

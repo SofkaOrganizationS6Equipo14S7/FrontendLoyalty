@@ -1,0 +1,110 @@
+import { ArrowUp, ArrowDown, Info, Plus, Pencil, Trash2, Link2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  Card, CardHeader, CardTitle, CardDescription, CardContent,
+  Badge, Button, Switch, EmptyState,
+} from '@/presentation/components/ui';
+import type { RuleResponse } from '@/domain/types';
+
+interface RulesTabProps {
+  rules: RuleResponse[];
+  tabLabel: string;
+  isAdmin: boolean;
+  onCreateRule: () => void;
+  onEditRule: (rule: RuleResponse) => void;
+  onDeleteRule: (rule: RuleResponse) => void;
+  onToggleActive: (rule: RuleResponse) => void;
+  onAssignTiers: (rule: RuleResponse) => void;
+}
+
+export function RulesTab({
+  rules, tabLabel, isAdmin,
+  onCreateRule, onEditRule, onDeleteRule, onToggleActive, onAssignTiers,
+}: RulesTabProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              {tabLabel} Rules
+              <Badge variant="secondary" className="ml-2 font-normal text-xs">{rules.length} Total</Badge>
+            </CardTitle>
+            <CardDescription>Rules are applied in order of priority. Lower numbers execute first.</CardDescription>
+          </div>
+          {isAdmin && (
+            <Button size="sm" className="gap-1.5" onClick={onCreateRule}>
+              <Plus className="h-4 w-4" /> Add Rule
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {rules.length === 0 ? (
+            <EmptyState
+              icon={<Info className="h-6 w-6" />}
+              title="No rules configured"
+              description={`Create your first ${tabLabel.toLowerCase()} discount rule.`}
+              action={isAdmin ? <Button variant="outline" onClick={onCreateRule}>Create Rule</Button> : undefined}
+            />
+          ) : (
+            rules.map((rule, index) => (
+              <div
+                key={rule.id}
+                className={cn(
+                  'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-lg border bg-white dark:bg-slate-950 transition-colors',
+                  rule.isActive
+                    ? 'border-slate-200 dark:border-slate-800 shadow-sm'
+                    : 'border-slate-100 dark:border-slate-800/50 opacity-70',
+                )}
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="flex flex-col items-center justify-center space-y-1">
+                    <button disabled={index === 0} className="text-slate-400 hover:text-indigo-600 disabled:opacity-30 transition-colors">
+                      <ArrowUp className="h-4 w-4" />
+                    </button>
+                    <span className="text-xs font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                      P{index + 1}
+                    </span>
+                    <button disabled={index === rules.length - 1} className="text-slate-400 hover:text-indigo-600 disabled:opacity-30 transition-colors">
+                      <ArrowDown className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-semibold text-slate-900 dark:text-slate-100">{rule.name}</h4>
+                      {!rule.isActive && <Badge variant="secondary" className="text-[10px] py-0">Inactive</Badge>}
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                      <span className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded-md font-medium">
+                        {rule.discountPercentage}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 mr-1">
+                    <span className="font-medium">{rule.isActive ? 'On' : 'Off'}</span>
+                    <Switch checked={rule.isActive} onCheckedChange={() => onToggleActive(rule)} />
+                  </div>
+                  {isAdmin && (
+                    <>
+                      <Button variant="ghost" size="icon" title="Assign Tiers" onClick={() => onAssignTiers(rule)}>
+                        <Link2 className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => onEditRule(rule)}>Edit</Button>
+                      <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-700" onClick={() => onDeleteRule(rule)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
