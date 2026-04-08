@@ -1,4 +1,5 @@
-import { Modal, Button } from '@/presentation/components/ui';
+import { Modal } from './Modal';
+import { Button } from '../Button';
 
 interface FormModalProps {
   isOpen: boolean;

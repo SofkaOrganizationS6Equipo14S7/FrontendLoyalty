@@ -11,11 +11,35 @@ interface TabsProps {
   tabs: Tab[];
   activeTab: string;
   onChange: (key: string) => void;
+  variant?: 'underline' | 'pill';
+  className?: string;
 }
 
-export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
+export function Tabs({ tabs, activeTab, onChange, variant = 'underline', className }: TabsProps) {
+  if (variant === 'pill') {
+    return (
+      <div className={cn('flex space-x-1 rounded-lg bg-slate-100 dark:bg-slate-800/50 p-1 w-fit', className)}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => onChange(tab.key)}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ease-out',
+              activeTab === tab.key
+                ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:text-white dark:ring-slate-700'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-700/50',
+            )}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="border-b border-slate-200 dark:border-slate-700">
+    <div className={cn('border-b border-slate-200 dark:border-slate-700', className)}>
       <nav className="flex gap-0 -mb-px">
         {tabs.map((tab) => (
           <button

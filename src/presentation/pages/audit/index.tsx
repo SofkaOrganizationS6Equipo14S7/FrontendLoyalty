@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { auditService, ecommercesService } from '@/infrastructure/api';
 import {
   Card,
   EmptyState,
@@ -7,59 +5,17 @@ import {
   TableLoading,
   PaginationFooter,
 } from '@/presentation/components/ui';
-import type { AuditLogResponse, EcommerceResponse } from '@/domain/types';
 import { AuditFilters } from './AuditFilters';
 import { AuditTable } from './AuditTable';
-
-const PAGE_SIZE = 20;
+import { useAudit } from './useAudit';
 
 export function AuditPage() {
-  const [logs, setLogs] = useState<AuditLogResponse[]>([]);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [ecommerces, setEcommerces] = useState<EcommerceResponse[]>([]);
-  const [filterEcommerce, setFilterEcommerce] = useState('');
-  const [filterEntity, setFilterEntity] = useState('');
-
-  const load = async (p = page) => {
-    setLoading(true);
-    try {
-      const data = await auditService.list({
-        page: p,
-        size: PAGE_SIZE,
-        ecommerceId: filterEcommerce || undefined,
-        entityName: filterEntity || undefined,
-      });
-      setLogs(data.content);
-      setTotalPages(data.totalPages);
-      setTotalElements(data.totalElements);
-    } catch {
-      /* handled */
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    ecommercesService.list({ size: 100 }).then((d) => setEcommerces(d.content)).catch(() => {});
-    load();
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [page, filterEcommerce, filterEntity]);
-
-  const handleEcommerceChange = (value: string) => {
-    setFilterEcommerce(value);
-    setPage(0);
-  };
-
-  const handleEntityChange = (value: string) => {
-    setFilterEntity(value);
-    setPage(0);
-  };
+  const {
+    logs, loading, ecommerces,
+    page, setPage, totalPages, totalElements, PAGE_SIZE,
+    filterEcommerce, filterEntity,
+    handleEcommerceChange, handleEntityChange,
+  } = useAudit();
 
   return (
     <div className="space-y-6">

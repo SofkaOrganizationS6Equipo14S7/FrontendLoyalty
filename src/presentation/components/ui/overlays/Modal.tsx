@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from './Button';
+import { Button } from '../Button';
 
 interface ModalProps {
   isOpen: boolean;
@@ -41,9 +41,13 @@ export function Modal({ isOpen, onClose, title, description, children, size = 'm
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm dark:bg-slate-950/80"
+            aria-hidden="true"
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 pointer-events-none">
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -55,11 +59,12 @@ export function Modal({ isOpen, onClose, title, description, children, size = 'm
             >
               <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 dark:border-slate-800">
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-950 dark:text-slate-50">{title}</h2>
+                  <h2 id="modal-title" className="text-lg font-semibold text-slate-950 dark:text-slate-50">{title}</h2>
                   {description && <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p>}
                 </div>
                 <button
                   onClick={onClose}
+                  aria-label="Close"
                   className="rounded-full p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <X className="h-5 w-5 text-slate-500 dark:text-slate-400" />

@@ -6,15 +6,14 @@ import {
   CardDescription,
   CardContent,
   Badge,
-  Button,
   Table,
   TableHeader,
   TableBody,
   TableRow,
   TableHead,
-  TableCell,
 } from '@/presentation/components/ui';
 import type { RoleResponse } from '@/domain/types';
+import { RoleRow } from './RoleRow';
 
 interface RolesTableProps {
   roles: RoleResponse[];
@@ -49,22 +48,7 @@ export function RolesTable({ roles, loading, onManagePermissions }: RolesTablePr
             </TableHeader>
             <TableBody>
               {roles.map((role) => (
-                <TableRow key={role.id}>
-                  <TableCell className="font-medium text-slate-900 dark:text-slate-100">{role.name}</TableCell>
-                  <TableCell>
-                    <Badge variant={role.isActive ? 'success' : 'secondary'}>
-                      {role.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-slate-500">
-                    {new Date(role.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => onManagePermissions(role)}>
-                      Manage Permissions
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                <RoleRow key={role.id} role={role} onManagePermissions={onManagePermissions} />
               ))}
             </TableBody>
           </Table>

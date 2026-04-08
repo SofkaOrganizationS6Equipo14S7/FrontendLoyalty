@@ -5,9 +5,10 @@ interface SwitchProps {
   onCheckedChange: (checked: boolean) => void;
   disabled?: boolean;
   className?: string;
+  'aria-label'?: string;
 }
 
-export function Switch({ className, checked, onCheckedChange, disabled }: SwitchProps) {
+export function Switch({ className, checked, onCheckedChange, disabled, ...props }: SwitchProps) {
   return (
     <button
       type="button"
@@ -20,6 +21,7 @@ export function Switch({ className, checked, onCheckedChange, disabled }: Switch
         checked ? "bg-indigo-600" : "bg-slate-200 dark:bg-slate-800",
         className
       )}
+      {...props}
     >
       <span
         className={cn(
