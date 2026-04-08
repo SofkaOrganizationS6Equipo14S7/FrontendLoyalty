@@ -81,11 +81,3 @@ export function UserFormModal({
     </FormModal>
   );
 }
-          <Button onClick={onSave} isLoading={saving} disabled={!form.username}>
-            {isEditing ? 'Save Changes' : 'Send Invite'}
-          </Button>
-        </div>
-      </div>
-    </Modal>
-  );
-}
