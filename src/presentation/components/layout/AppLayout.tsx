@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { Zap } from 'lucide-react';
-import { Sidebar } from './Sidebar';
-import { TopBar } from './TopBar';
+import { Sidebar } from './sidebar';
+import { TopBar } from './topbar';
 import { useAuthStore, useSidebarStore } from '@/infrastructure/store';
 
 export function AppLayout() {

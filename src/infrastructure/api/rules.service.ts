@@ -16,7 +16,6 @@ import type {
 } from '@/domain/types';
 
 export const rulesService = {
-  // Discount types
   getDiscountTypes: () =>
     apiClient.get<DiscountTypeDTO[]>('/rules/discount-types').then((r) => r.data),
 

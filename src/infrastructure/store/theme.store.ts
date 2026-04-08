@@ -43,7 +43,6 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   },
 }));
 
-// Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
   const state = useThemeStore.getState();
   if (state.theme === 'system') {
