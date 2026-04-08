@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/infrastructure/store';
-import { getApiErrorMessage } from '@/presentation/hooks';
+import { getApiErrorMessage } from '@/lib/utils';
 import { LoginBranding } from './LoginBranding';
 import { LoginForm } from './LoginForm';
 

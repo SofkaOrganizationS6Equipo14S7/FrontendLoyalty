@@ -60,7 +60,6 @@ export function useUsers() {
         await usersService.update(editingUser.uid, {
           username: form.username,
           email: form.email,
-          roleId: form.roleId,
           ecommerceId: form.ecommerceId || undefined,
         });
         toast.success('User updated');
@@ -80,6 +79,16 @@ export function useUsers() {
       toast.error('Error saving user');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleToggleActive = async (u: UserResponse) => {
+    try {
+      await usersService.update(u.uid, { active: !u.isActive });
+      toast.success(u.isActive ? 'User deactivated' : 'User activated');
+      load();
+    } catch {
+      toast.error('Error updating user status');
     }
   };
 
@@ -112,6 +121,7 @@ export function useUsers() {
     page, setPage, totalPages, totalElements, PAGE_SIZE,
     showModal, setShowModal, editingUser, form, setForm, saving,
     openCreate, openEdit, handleSave,
+    handleToggleActive,
     deleteTarget, setDeleteTarget, handleDelete,
   };
 }

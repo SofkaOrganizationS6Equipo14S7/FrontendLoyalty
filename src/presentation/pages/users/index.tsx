@@ -19,6 +19,7 @@ export function UsersPage() {
     page, setPage, totalPages, totalElements, PAGE_SIZE,
     showModal, setShowModal, editingUser, form, setForm, saving,
     openCreate, openEdit, handleSave,
+    handleToggleActive,
     deleteTarget, setDeleteTarget, handleDelete,
   } = useUsers();
 
@@ -52,6 +53,7 @@ export function UsersPage() {
           loading={loading}
           pageSize={PAGE_SIZE}
           onEdit={openEdit}
+          onToggleActive={handleToggleActive}
           onDelete={setDeleteTarget}
         />
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { discountLogsService, rulesService, ecommercesService, usersService } from '@/infrastructure/api';
-import { getTimeAgo } from '@/presentation/hooks';
+import { getTimeAgo } from '@/lib/utils';
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

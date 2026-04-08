@@ -57,16 +57,25 @@ export function UserFormModal({
           onChange={(e) => onFormChange({ ...form, password: e.target.value })}
         />
       )}
-      <Select
-        label="Role"
-        options={[
-          { value: 'USER', label: 'User' },
-          { value: 'STORE_ADMIN', label: 'Store Admin' },
-          { value: 'SUPER_ADMIN', label: 'Super Admin' },
-        ]}
-        value={form.roleId}
-        onChange={(e) => onFormChange({ ...form, roleId: e.target.value })}
-      />
+      {!isEditing ? (
+        <Select
+          label="Role"
+          options={[
+            { value: '', label: 'Select role...' },
+            { value: 'USER', label: 'User' },
+            { value: 'STORE_ADMIN', label: 'Store Admin' },
+            { value: 'SUPER_ADMIN', label: 'Super Admin' },
+          ]}
+          value={form.roleId}
+          onChange={(e) => onFormChange({ ...form, roleId: e.target.value })}
+        />
+      ) : (
+        <Input
+          label="Role"
+          value={form.roleId.replace('_', ' ')}
+          disabled
+        />
+      )}
       {ecommerces.length > 0 && form.roleId !== 'SUPER_ADMIN' && (
         <Select
           label="Store"

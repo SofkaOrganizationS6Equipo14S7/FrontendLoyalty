@@ -33,12 +33,12 @@ export interface UserCreateRequest {
 export interface UserUpdateRequest {
   username?: string;
   email?: string;
-  roleId?: string;
+  password?: string;
   ecommerceId?: string | null;
+  active?: boolean;
 }
 
 export interface ProfileUpdateRequest {
-  name: string;
   email: string;
 }
 
