@@ -1,4 +1,4 @@
-export { apiClient } from './client';
+export { apiClient, setSelectedEcommerceId, getSelectedEcommerceId } from './client';
 export { authService } from './auth.service';
 export { usersService } from './users.service';
 export { ecommercesService } from './ecommerces.service';

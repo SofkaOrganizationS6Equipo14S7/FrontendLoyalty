@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
-import { rulesService } from '@/infrastructure/api';
+import { rulesService, ecommercesService, setSelectedEcommerceId } from '@/infrastructure/api';
 import { useAuthStore } from '@/infrastructure/store';
 import { Button, PageHeader, Tabs } from '@/presentation/components/ui';
 import { useIsAdmin } from '@/presentation/hooks';
-import type { DiscountTypeDTO } from '@/domain/types';
+import type { DiscountTypeDTO, EcommerceResponse } from '@/domain/types';
 import { RulesTab } from './RulesTab';
 import { TiersTab } from './TiersTab';
 import { DiscountModals } from './DiscountModals';
@@ -23,19 +23,43 @@ export function DiscountsPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const isAdmin = useIsAdmin();
+  const isSuperAdmin = !user?.ecommerceId;
 
   const [activeTab, setActiveTab] = useState<TabKey>('SEASONAL');
   const [discountTypes, setDiscountTypes] = useState<DiscountTypeDTO[]>([]);
+  const [ecommerces, setEcommerces] = useState<EcommerceResponse[]>([]);
+  const [selectedEcommerce, setSelectedEcommerce] = useState<string>('');
 
   const ruleState = useRules(discountTypes, activeTab);
-  const tierState = useTiers(user?.ecommerceId || '');
+  const tierState = useTiers(user?.ecommerceId || selectedEcommerce || '');
 
   useEffect(() => {
     rulesService.getDiscountTypes().then(setDiscountTypes).catch(() => {});
-    ruleState.loadRules();
-    tierState.loadTiers();
+    if (isSuperAdmin) {
+      ecommercesService.list().then((res) => {
+        const items = res.content || [];
+        setEcommerces(items);
+        if (items.length > 0) {
+          setSelectedEcommerce(items[0].uid);
+          setSelectedEcommerceId(items[0].uid);
+          // Load rules after ecommerce header is set
+          ruleState.loadRules();
+          tierState.loadTiers();
+        }
+      }).catch(() => {});
+    } else {
+      ruleState.loadRules();
+      tierState.loadTiers();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleEcommerceChange = (uid: string) => {
+    setSelectedEcommerce(uid);
+    setSelectedEcommerceId(uid);
+    ruleState.loadRules();
+    tierState.loadTiers();
+  };
 
   const activeTabLabel = TABS.find((t) => t.key === activeTab)?.label || '';
 
@@ -52,6 +76,21 @@ export function DiscountsPage() {
           ) : undefined
         }
       />
+
+      {isSuperAdmin && ecommerces.length > 0 && (
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Ecommerce:</label>
+          <select
+            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+            value={selectedEcommerce}
+            onChange={(e) => handleEcommerceChange(e.target.value)}
+          >
+            {ecommerces.map((ec) => (
+              <option key={ec.uid} value={ec.uid}>{ec.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <Tabs
         variant="pill"

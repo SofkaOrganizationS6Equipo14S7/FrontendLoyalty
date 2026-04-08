@@ -15,7 +15,7 @@ import { useUsers } from './useUsers';
 export function UsersPage() {
   const { user: authUser } = useAuthStore();
   const {
-    filtered, ecommerces, loading, search, setSearch,
+    filtered, ecommerces, roles, loading, search, setSearch,
     page, setPage, totalPages, totalElements, PAGE_SIZE,
     showModal, setShowModal, editingUser, form, setForm, saving,
     openCreate, openEdit, handleSave,
@@ -71,6 +71,7 @@ export function UsersPage() {
         isEditing={!!editingUser}
         form={form}
         ecommerces={ecommerces}
+        roles={roles}
         saving={saving}
         onFormChange={setForm}
         onSave={handleSave}

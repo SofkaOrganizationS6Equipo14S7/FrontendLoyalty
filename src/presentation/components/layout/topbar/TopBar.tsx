@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { Menu, Bell } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useSidebarStore } from '@/infrastructure/store';
 import { pageTitles } from '../navigation.config';
 import { ThemeToggle } from './ThemeToggle';
@@ -30,11 +30,6 @@ export function TopBar() {
           </h1>
         </div>
         <div className="flex items-center gap-x-4 lg:gap-x-6">
-          <button type="button" className="-m-2.5 p-2.5 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300">
-            <span className="sr-only">View notifications</span>
-            <Bell className="h-5 w-5" aria-hidden="true" />
-          </button>
-
           <ThemeToggle />
 
           <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-slate-200 dark:lg:bg-slate-800" aria-hidden="true" />

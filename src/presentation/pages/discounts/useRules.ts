@@ -51,13 +51,15 @@ export function useRules(discountTypes: DiscountTypeDTO[], activeTab: string) {
       ]);
       setAttributes(attrs);
       setPriorities(prios);
+      return { attrs, prios };
     }
+    return { attrs: [], prios: [] };
   };
 
   const openCreate = async () => {
     setEditingRule(null);
-    await loadAttributes();
-    setForm(EMPTY_RULE_FORM);
+    const { prios } = await loadAttributes();
+    setForm({ ...EMPTY_RULE_FORM, discountPriorityId: prios[0]?.id || '' });
     setShowForm(true);
   };
 

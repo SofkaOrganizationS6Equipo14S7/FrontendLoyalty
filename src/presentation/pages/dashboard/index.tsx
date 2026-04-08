@@ -20,9 +20,9 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <MetricsGrid metrics={metrics} />
-      <div className="grid gap-4 lg:grid-cols-7">
+      <div className="grid gap-4 lg:grid-cols-7 min-h-0 flex-1">
         <RevenueChart data={chartData} />
         <RecentActivity activity={activity} />
       </div>

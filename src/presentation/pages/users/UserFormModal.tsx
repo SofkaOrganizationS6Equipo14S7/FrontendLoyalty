@@ -1,5 +1,5 @@
 import { Input, Select, FormModal } from '@/presentation/components/ui';
-import type { EcommerceResponse } from '@/domain/types';
+import type { EcommerceResponse, RoleResponse } from '@/domain/types';
 
 interface UserFormData {
   username: string;
@@ -14,6 +14,7 @@ interface UserFormModalProps {
   isEditing: boolean;
   form: UserFormData;
   ecommerces: EcommerceResponse[];
+  roles: RoleResponse[];
   saving: boolean;
   onFormChange: (form: UserFormData) => void;
   onSave: () => void;
@@ -21,9 +22,12 @@ interface UserFormModalProps {
 }
 
 export function UserFormModal({
-  isOpen, isEditing, form, ecommerces, saving,
+  isOpen, isEditing, form, ecommerces, roles, saving,
   onFormChange, onSave, onClose,
 }: UserFormModalProps) {
+  const selectedRole = roles.find((r) => r.id === form.roleId);
+  const isSuperAdmin = selectedRole?.name === 'SUPER_ADMIN';
+
   return (
     <FormModal
       isOpen={isOpen}
@@ -62,9 +66,7 @@ export function UserFormModal({
           label="Role"
           options={[
             { value: '', label: 'Select role...' },
-            { value: 'USER', label: 'User' },
-            { value: 'STORE_ADMIN', label: 'Store Admin' },
-            { value: 'SUPER_ADMIN', label: 'Super Admin' },
+            ...roles.map((r) => ({ value: r.id, label: r.name.replace(/_/g, ' ') })),
           ]}
           value={form.roleId}
           onChange={(e) => onFormChange({ ...form, roleId: e.target.value })}
@@ -72,11 +74,11 @@ export function UserFormModal({
       ) : (
         <Input
           label="Role"
-          value={form.roleId.replace('_', ' ')}
+          value={selectedRole?.name.replace(/_/g, ' ') || form.roleId}
           disabled
         />
       )}
-      {ecommerces.length > 0 && form.roleId !== 'SUPER_ADMIN' && (
+      {ecommerces.length > 0 && !isSuperAdmin && (
         <Select
           label="Store"
           options={[

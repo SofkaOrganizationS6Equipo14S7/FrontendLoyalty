@@ -24,7 +24,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pl-0">
-        <div className="h-[350px] w-full">
+        <div className="h-[260px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />

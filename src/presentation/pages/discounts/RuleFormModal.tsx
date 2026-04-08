@@ -51,8 +51,8 @@ export function RuleFormModal({
         <Input
           key={attr.id}
           label={attr.attributeName}
-          value={form.attrs[attr.id] || ''}
-          onChange={(e) => onFormChange({ ...form, attrs: { ...form.attrs, [attr.id]: e.target.value } })}
+          value={form.attrs[attr.attributeName] || ''}
+          onChange={(e) => onFormChange({ ...form, attrs: { ...form.attrs, [attr.attributeName]: e.target.value } })}
           placeholder={`Enter ${attr.attributeName.toLowerCase()}`}
         />
       ))}
