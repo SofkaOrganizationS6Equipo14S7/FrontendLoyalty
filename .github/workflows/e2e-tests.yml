@@ -1,0 +1,159 @@
+name: Serenity BDD E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+
+jobs:
+  serenity-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: SofkaOrganizationS6Equipo14S7/Service-AdminLoyalty
+          path: backend
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Start infrastructure
+        working-directory: backend/backend
+        run: docker compose up -d
+
+      - name: Wait for infrastructure to be healthy
+        working-directory: backend/backend
+        run: |
+          echo "Waiting for PostgreSQL Admin (5432)..."
+          for i in $(seq 1 30); do
+            docker compose exec -T postgres-admin pg_isready -U loyalty -d loyalty_admin && break
+            echo "  attempt $i..."
+            sleep 2
+          done
+
+          echo "Waiting for PostgreSQL Engine (5433)..."
+          for i in $(seq 1 30); do
+            docker compose exec -T postgres-engine pg_isready -U loyalty -d loyalty_engine && break
+            echo "  attempt $i..."
+            sleep 2
+          done
+
+          echo "Waiting for RabbitMQ (5672)..."
+          for i in $(seq 1 30); do
+            docker compose exec -T rabbitmq rabbitmq-diagnostics check_port_connectivity && break
+            echo "  attempt $i..."
+            sleep 2
+          done
+
+      - name: Build service-admin
+        working-directory: backend/backend/service-admin
+        run: ./mvnw package -DskipTests -q
+
+      - name: Build service-engine
+        working-directory: backend/backend/service-engine
+        run: ./mvnw package -DskipTests -q
+
+      - name: Start service-admin
+        working-directory: backend/backend/service-admin
+        run: java -jar target/*.jar &
+
+      - name: Start service-engine
+        working-directory: backend/backend/service-engine
+        run: java -jar target/*.jar &
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for service-admin (8081)..."
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null -w '%{http_code}' http://localhost:8081/api/v1/auth/login 2>/dev/null | grep -qE '(200|400|401|405)'; then
+              echo "  service-admin is UP"
+              break
+            fi
+            echo "  attempt $i..."
+            sleep 3
+          done
+
+          echo "Waiting for service-engine (8082)..."
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null -w '%{http_code}' http://localhost:8082/api/v1/health 2>/dev/null | grep -qE '(200|400|401|405)'; then
+              echo "  service-engine is UP"
+              break
+            fi
+            echo "  attempt $i..."
+            sleep 3
+          done
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          VITE_API_URL: /api/v1
+
+      - name: Serve frontend
+        run: |
+          npx serve dist -l 3000 --no-clipboard &
+          echo "Waiting for frontend to be ready..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 > /dev/null 2>&1; then
+              echo "  frontend is UP on port 3000"
+              break
+            fi
+            echo "  attempt $i..."
+            sleep 2
+          done
+
+      - name: Checkout Serenity BDD tests
+        uses: actions/checkout@v4
+        with:
+          repository: SofkaOrganizationS6Equipo14S7/SerenityBDDCucumberLoyalty
+          path: serenity-tests
+
+      - name: Verify Serenity project
+        run: |
+          echo "Contents of serenity-tests/:"
+          ls -la serenity-tests/
+          echo "---"
+          find serenity-tests -name 'build.gradle' -maxdepth 3
+          if [ ! -f serenity-tests/build.gradle ]; then
+            echo "ERROR: build.gradle not found at serenity-tests root"
+            exit 1
+          fi
+
+      - name: Run Serenity BDD tests
+        working-directory: serenity-tests
+        run: |
+          ./gradlew clean test aggregate \
+            -Dheadless.mode=true \
+            -Dwebdriver.driver=chrome \
+            -Dchrome.switches="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--window-size=1920,1080"
+
+      - name: Upload Serenity Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-reports
+          path: serenity-tests/build/reports/serenity/
