@@ -13,7 +13,7 @@ import { UserFormModal } from './UserFormModal';
 import { useUsers } from './useUsers';
 
 export function UsersPage() {
-  const { user: authUser, hasRole } = useAuthStore();
+  const { hasRole } = useAuthStore();
   const {
     filtered, ecommerces, roles, loading, search, setSearch,
     page, setPage, totalPages, totalElements, PAGE_SIZE,
