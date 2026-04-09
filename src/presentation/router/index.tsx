@@ -11,6 +11,7 @@ import {
   AuditPage,
   SettingsPage,
   RolesPermissionsPage,
+  NotFoundPage,
 } from '@/presentation/pages';
 
 export const router = createBrowserRouter([
@@ -62,10 +63,14 @@ export const router = createBrowserRouter([
         path: 'settings',
         element: <SettingsPage />,
       },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
     ],
   },
   {
     path: '*',
-    element: <Navigate to="/dashboard" replace />,
+    element: <NotFoundPage />,
   },
 ]);

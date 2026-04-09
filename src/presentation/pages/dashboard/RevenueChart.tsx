@@ -47,6 +47,8 @@ export function RevenueChart({ data }: RevenueChartProps) {
                   border: '1px solid #e2e8f0',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 }}
+                wrapperStyle={{ zIndex: 10 }}
+                cursor={false}
               />
               <Line
                 type="monotone"

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { auditService, ecommercesService } from '@/infrastructure/api';
-import type { AuditLogResponse, EcommerceResponse } from '@/domain/types';
+import { auditService, ecommercesService, usersService } from '@/infrastructure/api';
+import type { AuditLogResponse, EcommerceResponse, UserResponse } from '@/domain/types';
 
 const PAGE_SIZE = 20;
 
@@ -11,6 +11,7 @@ export function useAudit() {
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [ecommerces, setEcommerces] = useState<EcommerceResponse[]>([]);
+  const [users, setUsers] = useState<Map<string, string>>(new Map());
   const [filterEcommerce, setFilterEcommerce] = useState('');
   const [filterEntity, setFilterEntity] = useState('');
 
@@ -35,6 +36,11 @@ export function useAudit() {
 
   useEffect(() => {
     ecommercesService.list({ size: 100 }).then((d) => setEcommerces(d.content)).catch(() => {});
+    usersService.list({ size: 100 }).then((d) => {
+      const map = new Map<string, string>();
+      d.content.forEach((u: UserResponse) => map.set(u.uid, u.username));
+      setUsers(map);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -52,7 +58,7 @@ export function useAudit() {
   };
 
   return {
-    logs, loading, ecommerces,
+    logs, loading, ecommerces, users,
     page, setPage, totalPages, totalElements, PAGE_SIZE,
     filterEcommerce, filterEntity,
     handleEcommerceChange, handleEntityChange,

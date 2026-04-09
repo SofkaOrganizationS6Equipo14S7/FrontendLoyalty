@@ -38,7 +38,7 @@ export function TierCard({
           {isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />}
           <div>
             <h4 className="font-semibold text-slate-900 dark:text-slate-100">{tier.name}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Level {tier.hierarchyLevel} &bull; {tier.discountPercentage}% discount</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Level {tier.hierarchyLevel} &bull; {tier.discountPercentage ?? 0}% discount</p>
           </div>
         </div>
         <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>

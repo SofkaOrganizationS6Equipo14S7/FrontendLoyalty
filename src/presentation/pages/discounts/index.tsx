@@ -37,7 +37,7 @@ export function DiscountsPage() {
     rulesService.getDiscountTypes().then(setDiscountTypes).catch(() => {});
     if (isSuperAdmin) {
       ecommercesService.list().then((res) => {
-        const items = res.content || [];
+        const items = (res.content || []).filter((e: EcommerceResponse) => e.status === 'ACTIVE');
         setEcommerces(items);
         if (items.length > 0) {
           setSelectedEcommerce(items[0].uid);

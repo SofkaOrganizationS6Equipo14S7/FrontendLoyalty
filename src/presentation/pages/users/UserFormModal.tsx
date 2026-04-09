@@ -83,7 +83,7 @@ export function UserFormModal({
           label="Store"
           options={[
             { value: '', label: 'Select store...' },
-            ...ecommerces.map((e) => ({ value: e.uid, label: e.name })),
+            ...ecommerces.filter((e) => e.status === 'ACTIVE').map((e) => ({ value: e.uid, label: e.name })),
           ]}
           value={form.ecommerceId}
           onChange={(e) => onFormChange({ ...form, ecommerceId: e.target.value })}

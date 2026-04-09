@@ -51,7 +51,7 @@ export function useDashboardData() {
           totalRevenue,
           activeDiscounts,
           totalUsers: allUsers.length,
-          activeStores: allEcommerces.filter((e: any) => e.isActive).length,
+          activeStores: allEcommerces.filter((e: any) => e.status === 'ACTIVE').length,
         });
 
         const monthMap = new Map<number, { revenue: number; discounts: number }>();

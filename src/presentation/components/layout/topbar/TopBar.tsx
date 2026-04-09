@@ -8,7 +8,7 @@ import { UserMenu } from './UserMenu';
 export function TopBar() {
   const { setOpen } = useSidebarStore();
   const location = useLocation();
-  const title = pageTitles[location.pathname] || 'Dashboard';
+  const title = pageTitles[location.pathname] || (location.pathname === '/dashboard' ? 'Dashboard' : 'Page Not Found');
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b border-slate-200 bg-white px-4 shadow-sm dark:border-slate-800 dark:bg-slate-950 sm:gap-x-6 sm:px-6 lg:px-8">

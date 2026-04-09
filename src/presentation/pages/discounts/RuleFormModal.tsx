@@ -47,15 +47,22 @@ export function RuleFormModal({
           onChange={(e) => onFormChange({ ...form, discountPriorityId: e.target.value })}
         />
       )}
-      {attributes.map((attr) => (
-        <Input
-          key={attr.id}
-          label={attr.attributeName}
-          value={form.attrs[attr.attributeName] || ''}
-          onChange={(e) => onFormChange({ ...form, attrs: { ...form.attrs, [attr.attributeName]: e.target.value } })}
-          placeholder={`Enter ${attr.attributeName.toLowerCase()}`}
-        />
-      ))}
+      {attributes.map((attr) => {
+        const label = attr.attributeName
+          .replace(/_/g, ' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        const isDate = /date/i.test(attr.attributeName);
+        return (
+          <Input
+            key={attr.id}
+            label={label}
+            type={isDate ? 'date' : 'text'}
+            value={form.attrs[attr.attributeName] || ''}
+            onChange={(e) => onFormChange({ ...form, attrs: { ...form.attrs, [attr.attributeName]: e.target.value } })}
+            placeholder={isDate ? '' : `Enter ${label.toLowerCase()}`}
+          />
+        );
+      })}
     </FormModal>
   );
 }

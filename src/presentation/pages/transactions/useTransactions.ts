@@ -39,30 +39,41 @@ export function useTransactions() {
 
   useEffect(() => {
     load();
-  }, [page]);
+  }, [load]);
 
   const handleSearch = () => {
     setPage(0);
     load(0);
   };
 
-  const handleExportCSV = () => {
-    if (logs.length === 0) {
+  const handleExportCSV = async () => {
+    if (totalElements === 0) {
       toast.error('No data to export');
       return;
     }
-    const headers = ['Transaction ID', 'Store', 'Rule', 'Order Amount', 'Discount Applied', 'Status', 'Date'];
-    const rows = logs.map((log) => [
-      log.externalOrderId || log.id.slice(0, 8),
-      log.ecommerceId || '',
-      log.appliedRulesDetails?.[0]?.ruleName || '',
-      Number(log.originalAmount).toFixed(2),
-      Number(log.discountApplied).toFixed(2),
-      'Completed',
-      format(new Date(log.createdAt), DATE_FORMAT),
-    ]);
-    exportToCsv(headers, rows, `transactions-${format(new Date(), DATE_FORMAT)}.csv`);
-    toast.success('CSV exported');
+    try {
+      const allData = await discountLogsService.list({
+        ecommerceId: user?.ecommerceId || undefined,
+        externalOrderId: searchQuery || undefined,
+        page: 0,
+        size: totalElements,
+      });
+      const allLogs = allData.content;
+      const headers = ['Transaction ID', 'Store', 'Rule', 'Order Amount', 'Discount Applied', 'Status', 'Date'];
+      const rows = allLogs.map((log) => [
+        log.externalOrderId || log.id.slice(0, 8),
+        log.ecommerceId || '',
+        log.appliedRulesDetails?.[0]?.ruleName || '',
+        Number(log.originalAmount).toFixed(2),
+        Number(log.discountApplied).toFixed(2),
+        'Completed',
+        format(new Date(log.createdAt), DATE_FORMAT),
+      ]);
+      exportToCsv(headers, rows, `transactions-${format(new Date(), DATE_FORMAT)}.csv`);
+      toast.success('CSV exported');
+    } catch {
+      toast.error('Error exporting CSV');
+    }
   };
 
   return {

@@ -34,25 +34,25 @@ export function MetricsGrid({ metrics }: MetricsGridProps) {
       <MetricCardItem
         title="Total Revenue"
         value={`$${(metrics?.totalRevenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-        description="+20.1% from last month"
+        description="Total accumulated revenue"
         icon={DollarSign}
       />
       <MetricCardItem
         title="Active Discounts"
-        value={`+${metrics?.activeDiscounts || 0}`}
-        description="+180.1% from last month"
+        value={String(metrics?.activeDiscounts || 0)}
+        description="Currently active discount rules"
         icon={Tag}
       />
       <MetricCardItem
         title="Total Users"
         value={(metrics?.totalUsers || 0).toLocaleString()}
-        description="+19% from last month"
+        description="Registered platform users"
         icon={Users}
       />
       <MetricCardItem
         title="Active Stores"
         value={String(metrics?.activeStores || 0)}
-        description="+201 since last week"
+        description="Connected active stores"
         icon={CreditCard}
       />
     </div>

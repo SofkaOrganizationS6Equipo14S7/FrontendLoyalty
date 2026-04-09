@@ -1,4 +1,3 @@
-import { Filter } from 'lucide-react';
 import { SearchInput } from '@/presentation/components/ui';
 
 interface TransactionsToolbarProps {
@@ -24,9 +23,6 @@ export function TransactionsToolbar({
         className="w-full sm:max-w-sm"
       />
       <div className="flex items-center gap-3">
-        <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-          <Filter className="h-4 w-4" /> Filters
-        </button>
         <span className="text-sm text-slate-400">{totalElements} entries</span>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { usersService, ecommercesService, rolesService } from '@/infrastructure/api';
+import { normalizeText } from '@/lib/utils';
 import type { UserResponse, EcommerceResponse, RoleResponse } from '@/domain/types';
 
 interface UserFormState {
@@ -55,7 +56,7 @@ export function useUsers() {
     load();
   }, [load]);
 
-  const filtered = users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()));
+  const filtered = users.filter((u) => normalizeText(u.username).includes(normalizeText(search)));
 
   const handleSave = async () => {
     setSaving(true);

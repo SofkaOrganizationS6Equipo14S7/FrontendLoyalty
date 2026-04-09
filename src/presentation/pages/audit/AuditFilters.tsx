@@ -34,7 +34,7 @@ export function AuditFilters({
           onChange={(e) => onEcommerceChange(e.target.value)}
           options={[
             { value: '', label: 'All stores' },
-            ...ecommerces.map((ec) => ({ value: ec.uid, label: ec.name })),
+            ...ecommerces.filter((ec) => ec.status === 'ACTIVE').map((ec) => ({ value: ec.uid, label: ec.name })),
           ]}
         />
       </div>

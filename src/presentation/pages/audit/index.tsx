@@ -11,7 +11,7 @@ import { useAudit } from './useAudit';
 
 export function AuditPage() {
   const {
-    logs, loading, ecommerces,
+    logs, loading, ecommerces, users,
     page, setPage, totalPages, totalElements, PAGE_SIZE,
     filterEcommerce, filterEntity,
     handleEcommerceChange, handleEntityChange,
@@ -39,7 +39,7 @@ export function AuditPage() {
           ) : logs.length === 0 ? (
             <EmptyState title="No audit logs found" description="Try adjusting your filters." className="px-6 py-16" />
           ) : (
-            <AuditTable logs={logs} />
+            <AuditTable logs={logs} users={users} />
           )}
         </div>
 

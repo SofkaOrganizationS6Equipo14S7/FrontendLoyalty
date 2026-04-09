@@ -4,6 +4,8 @@ import {
   TableRow,
   TableCell,
 } from '@/presentation/components/ui';
+import { format } from 'date-fns';
+import { DATE_FORMAT } from '@/lib/constants';
 import type { RoleResponse } from '@/domain/types';
 
 interface RoleRowProps {
@@ -21,7 +23,7 @@ export function RoleRow({ role, onManagePermissions }: RoleRowProps) {
         </Badge>
       </TableCell>
       <TableCell className="text-sm text-slate-500">
-        {new Date(role.createdAt).toLocaleDateString()}
+        {format(new Date(role.createdAt), DATE_FORMAT)}
       </TableCell>
       <TableCell className="text-right">
         <Button variant="outline" size="sm" onClick={() => onManagePermissions(role)}>

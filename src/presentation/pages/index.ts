@@ -7,3 +7,4 @@ export { TransactionsPage } from './transactions';
 export { AuditPage } from './audit';
 export { SettingsPage } from './settings';
 export { RolesPermissionsPage } from './roles';
+export { NotFoundPage } from './not-found';
