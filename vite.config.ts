@@ -19,4 +19,27 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.ts'],
+    include: ['tests/**/*.{test,spec}.{ts,tsx}'],
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'text-summary', 'html', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/test/**',
+        'src/main.tsx',
+        'src/**/*.d.ts',
+        'src/domain/types/**',
+      ],
+      thresholds: {
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        lines: 80,
+      },
+    },
+  },
 })
