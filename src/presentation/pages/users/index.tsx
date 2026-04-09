@@ -13,7 +13,7 @@ import { UserFormModal } from './UserFormModal';
 import { useUsers } from './useUsers';
 
 export function UsersPage() {
-  const { user: authUser } = useAuthStore();
+  const { user: authUser, hasRole } = useAuthStore();
   const {
     filtered, ecommerces, roles, loading, search, setSearch,
     page, setPage, totalPages, totalElements, PAGE_SIZE,
@@ -29,7 +29,7 @@ export function UsersPage() {
         title="Users"
         description="Manage team members and their roles across stores."
         actions={
-          authUser?.roleName === 'SUPER_ADMIN' ? (
+          hasRole('SUPER_ADMIN', 'STORE_ADMIN') ? (
             <Button onClick={openCreate} className="gap-2">
               <Plus className="h-4 w-4" />
               Add User
